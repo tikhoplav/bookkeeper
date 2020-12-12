@@ -1,0 +1,9 @@
+version: "3.8"
+
+services:
+  app:
+    image: tikhoplav/go
+    working_dir: /src
+    volumes:
+      - ./src:/src
+      - ./pkg:/go/pkg
