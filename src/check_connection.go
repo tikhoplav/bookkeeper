@@ -42,7 +42,7 @@ func main() {
 	}
 
 	if rows.Err() != nil {
-		fmt.Fprintf(os.Stderr, "Error executing a query%v\n", err)
+		fmt.Fprintf(os.Stderr, "Error executing a query: %v\n", err)
 		os.Exit(1)
 	}
 

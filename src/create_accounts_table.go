@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 	"github.com/jackc/pgx/v4"
-	"time"
 	"os"
+	"time"
 )
 
 func main() {
@@ -21,8 +21,8 @@ func main() {
 
 	sql := `CREATE EXTENSION IF NOT EXISTS ltree;
 	CREATE TABLE IF NOT EXISTS accounts (
-		"code" ltree,
-		"name" TEXT UNIQUE NOT NULL,
+		"code" ltree UNIQUE,
+		"name" TEXT NOT NULL,
 		"desc" TEXT DEFAULT ''
 	);
 	CREATE INDEX code_gist_idx ON accounts USING gist(code);
