@@ -2,13 +2,14 @@ package main
 
 import (
 	"context"
+	"flag"
 	"fmt"
 	"github.com/jackc/pgx/v4"
 	"os"
 	"time"
 )
 
-func main() {
+func __main() {
 	// Establish database connection
 	conn, err := pgx.Connect(context.Background(), os.Getenv("DB_URL"))
 	if err != nil {
@@ -17,16 +18,23 @@ func main() {
 	}
 	defer conn.Close(context.Background())
 
+	drop := flag.Bool("drop", false, "drop table before")
+	flag.Parse()
+
 	start := time.Now()
 
-	sql := `CREATE EXTENSION IF NOT EXISTS ltree;
-	CREATE TABLE IF NOT EXISTS accounts (
-		"code" ltree UNIQUE,
-		"name" TEXT NOT NULL,
-		"desc" TEXT DEFAULT ''
-	);
-	CREATE INDEX code_gist_idx ON accounts USING gist(code);
-	CREATE INDEX code_idx ON accounts USING btree(code);`
+	sql := `CREATE TABLE IF NOT EXISTS "accounts" (
+		"id" bigserial PRIMARY KEY,
+		"code" text UNIQUE NOT NULL,
+		"name" text NOT NULL,
+		"desc" text NOT NULL DEFAULT '',
+		"parent_id" bigint REFERENCES "accounts" ("id") ON DELETE CASCADE
+	);`
+
+	if *drop {
+		prepend := `DROP TABLE IF EXISTS "accounts";`
+		sql = fmt.Sprintf("%s\n%s", prepend, sql)
+	}
 
 	_, err = conn.Exec(context.Background(), sql)
 	if err != nil {

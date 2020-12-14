@@ -8,7 +8,7 @@ import (
 	"os"
 )
 
-func main() {
+func ___main() {
 	// Establish database connection
 	conn, err := pgx.Connect(context.Background(), os.Getenv("DB_URL"))
 	if err != nil {
@@ -27,18 +27,18 @@ func main() {
 
 	rows, err := conn.Query(context.Background(), "select generate_series(1,$1)", *n)
 	if err != nil {
-	    fmt.Fprintf(os.Stderr, "Unable to execute a query%v\n", err)
+		fmt.Fprintf(os.Stderr, "Unable to execute a query: %v\n", err)
 		os.Exit(1)
 	}
 	defer rows.Close()
 
 	for rows.Next() {
-	    var n int32
-	    err = rows.Scan(&n)
-	    if err != nil {
-	        return
-	    }
-	    res = append(res, n)
+		var n int32
+		err = rows.Scan(&n)
+		if err != nil {
+			return
+		}
+		res = append(res, n)
 	}
 
 	if rows.Err() != nil {

@@ -1,4 +1,4 @@
-module github.com/tikhoplab/bookkeeper
+module github.com/tikhoplav/bookkeeper
 
 go 1.15
 
